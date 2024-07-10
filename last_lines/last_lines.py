@@ -2,7 +2,7 @@ import io
 import os
 
 
-def last_lines(file_name, buffer_size=io.DEFAULT_BUFFER_SIZE, code="utf-8"):
+def last_lines(file_name: str, buffer_size=io.DEFAULT_BUFFER_SIZE, code="utf-8"):
     file_size = os.path.getsize(os.path.abspath(file_name))
     remaining_bytes_number_on_file = file_size
 

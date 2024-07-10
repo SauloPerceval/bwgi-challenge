@@ -2,13 +2,13 @@ from datetime import date
 from typing import List, Tuple
 
 
-def reconcile_accounts(l1, l2) -> Tuple[List]:
-    def days_diff(d1, d2):
+def reconcile_accounts(l1: List[List[str]], l2: List[List[str]]) -> Tuple[List]:
+    def days_diff(d1: str, d2: str):
         t_delta = date.fromisoformat(d1) - date.fromisoformat(d2)
 
         return abs(t_delta.days)
 
-    def process_result(input_list, missing_match_idx_list):
+    def process_result(input_list: List[List[str]], missing_match_idx_list: List[int]):
         return [
             [*v, "MISSING" if idx in set(missing_match_idx_list) else "FOUND"]
             for idx, v in enumerate(input_list)
@@ -22,23 +22,20 @@ def reconcile_accounts(l1, l2) -> Tuple[List]:
         idx for idx, _ in sorted(enumerate(l2), key=lambda x: x[1][0])
     ]
 
-    big_l_list, small_l_list = sorted([l1_sorted_idx_list, l2_sorted_idx_list], key=len)
-    big_l, small_1 = sorted([l1, l2], key=len)
-
-    found_idxs_on_big_l_set = set()
-    for bl_idx in big_l_list:
-        bl_val = big_l[bl_idx]
-        found_idx_on_small_list = None
-        for sl_idx in small_l_list:
-            sl_val = small_1[sl_idx]
-            if bl_val[1:] == sl_val[1:] and days_diff(bl_val[0], sl_val[0]) <= 1:
-                found_idxs_on_big_l_set.add(bl_idx)
-                found_idx_on_small_list = sl_idx
+    found_idxs_on_l1_set = set()
+    for l1_idx in l1_sorted_idx_list:
+        l1_val = l1[l1_idx]
+        found_idx_on_l2 = None
+        for l2_idx in l2_sorted_idx_list:
+            l2_val = l2[l2_idx]
+            if l1_val[1:] == l2_val[1:] and days_diff(l1_val[0], l2_val[0]) <= 1:
+                found_idxs_on_l1_set.add(l1_idx)
+                found_idx_on_l2 = l2_idx
                 break
-        if found_idx_on_small_list is not None:
-            small_l_list.remove(found_idx_on_small_list)
+        if found_idx_on_l2 is not None:
+            l2_sorted_idx_list.remove(found_idx_on_l2)
 
-    {big_l_list.remove(idx) for idx in found_idxs_on_big_l_set}
+    {l1_sorted_idx_list.remove(idx) for idx in found_idxs_on_l1_set}
 
     return (
         process_result(l1, l1_sorted_idx_list),

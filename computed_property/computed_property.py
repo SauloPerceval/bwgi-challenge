@@ -1,4 +1,7 @@
-def computed_property(*dep_attrs):
+from typing import Any, Tuple
+
+
+def computed_property(*dep_attrs_names: str):
     class ComputedPropertyClass:
         def __init__(self, fget=None, fset=None, fdel=None, doc=None):
             self.fget = fget
@@ -8,7 +11,9 @@ def computed_property(*dep_attrs):
                 doc = fget.__doc__
             self.__doc__ = doc
             self._name = ""
-            self._dep_attrs = {dep_attr: (None, False) for dep_attr in dep_attrs}
+            self._dep_attrs: dict[str, Tuple[Any, bool]] = {
+                dep_attr_name: (None, False) for dep_attr_name in dep_attrs_names
+            }
             self._cached_val = None
 
         def __set_name__(self, owner, name):
