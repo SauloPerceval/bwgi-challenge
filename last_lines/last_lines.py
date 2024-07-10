@@ -7,8 +7,8 @@ def last_lines(file_name, buffer_size=io.DEFAULT_BUFFER_SIZE, code="utf-8"):
     remaining_bytes_number_on_file = file_size
 
     with open(file_name, "rb", buffering=buffer_size) as file_reader:
-        remaining_bytes_buffer = b""
 
+        remaining_bytes_buffer = b""
         while remaining_bytes_number_on_file:
             number_of_bytes_to_read = min(buffer_size, remaining_bytes_number_on_file)
             remaining_bytes_number_on_file = max(
@@ -33,5 +33,5 @@ def last_lines(file_name, buffer_size=io.DEFAULT_BUFFER_SIZE, code="utf-8"):
 
 
 if __name__ == "__main__":
-    for line in last_lines("test_file.txt", 124):
+    for line in last_lines("test_file.txt"):
         print(line, end="")
